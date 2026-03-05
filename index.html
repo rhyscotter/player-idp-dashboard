@@ -7,8 +7,13 @@
 
 <style>
 :root{
-  --bg:#000; --card:#111; --border:#1e1e1e; --text:#fff; --muted:#8a8a8a;
-  --accent:#7B2EFF; --accent2:#B266FF;
+  --bg:#000;
+  --card:#111;
+  --border:#1e1e1e;
+  --text:#fff;
+  --muted:#8a8a8a;
+  --accent:#7B2EFF;
+  --accent2:#B266FF;
   --clubGlow: rgba(123,46,255,.18);
 }
 
@@ -26,7 +31,8 @@ body{
   width:100%;
   padding:40px 50px;
   background:
-    radial-gradient(1200px 700px at 20% -10%, rgba(255,255,255,.05), transparent 60%),
+    radial-gradient(1200px 700px at 20% -10%, var(--clubGlow), transparent 55%),
+    radial-gradient(1000px 600px at 80% 0%, rgba(255,255,255,.04), transparent 55%),
     linear-gradient(180deg,#000 0%,#050505 100%);
   position:relative;
   overflow:hidden;
@@ -226,7 +232,7 @@ body{
   margin-top:16px;
   height:3px;
   border-radius:999px;
-  background:linear-gradient(90deg, var(--accent), var(--accent2));
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
   opacity:.8;
 }
 
@@ -234,7 +240,7 @@ body{
   height:3px;
   border-radius:999px;
   margin-top:28px;
-  background:linear-gradient(90deg, var(--accent), var(--accent2));
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
 }
 </style>
 </head>
@@ -242,7 +248,6 @@ body{
 <body>
 <div class="stage">
   <div class="wrap">
-
     <div class="teamName" id="teamName">Individual Development Planner</div>
     <div class="sub" id="sub">Create new development plans and review existing player IDPs.</div>
     <div class="themeLine" aria-hidden="true"></div>
@@ -258,7 +263,6 @@ body{
       </div>
 
       <div class="grid">
-
         <div class="actionCard" id="createIDP" role="button" tabindex="0" aria-label="Create IDP">
           <div class="actionTop">
             <h4 class="actionTitle">Create IDP</h4>
@@ -280,19 +284,14 @@ body{
           </div>
           <div class="arrow" aria-hidden="true"></div>
         </div>
-
       </div>
 
       <div class="smallLine"></div>
     </div>
-
   </div>
 </div>
 
 <script>
-/* -------------------------------------------------------
-   Theme system (hash + postMessage init)
-------------------------------------------------------- */
 const CLUB_THEMES = {
   default: { accent:"#7B2EFF", accent2:"#B266FF", bgGlow:"rgba(123,46,255,.18)" },
   cherrybrook: { accent:"#C8102E", accent2:"#FF4B5C", bgGlow:"rgba(200,16,46,.20)" },
@@ -306,28 +305,29 @@ function applyTheme({ clubSlug, accent, accent2, glow, source }) {
   const slug = String(clubSlug || "default").trim().toLowerCase();
   const fallback = CLUB_THEMES[slug] || CLUB_THEMES.default;
 
-  const finalAccent  = clean(accent)  || fallback.accent;
+  const finalAccent  = clean(accent) || fallback.accent;
   const finalAccent2 = clean(accent2) || fallback.accent2 || finalAccent;
-  const finalGlow    = clean(glow)    || fallback.bgGlow;
+  const finalGlow    = clean(glow) || fallback.bgGlow;
 
   const r = document.documentElement.style;
   r.setProperty("--accent", finalAccent);
   r.setProperty("--accent2", finalAccent2);
   r.setProperty("--clubGlow", finalGlow);
 
-  console.log("🎨 THEME APPLIED:", { slug, accent: finalAccent, accent2: finalAccent2, glow: finalGlow, source: source || "unknown" });
+  console.log("THEME APPLIED:", { slug, finalAccent, finalAccent2, finalGlow, source });
 }
 
 (function bootFromHash(){
   const raw = (location.hash || "").replace(/^#/, "");
   const params = new URLSearchParams(raw);
 
-  const clubSlug = params.get("clubSlug") || "default";
-  const accent = params.get("accent") || "";
-  const accent2 = params.get("accent2") || "";
-  const glow = params.get("glow") || "";
-
-  applyTheme({ clubSlug, accent, accent2, glow, source: "hash" });
+  applyTheme({
+    clubSlug: params.get("clubSlug") || "default",
+    accent: params.get("accent") || "",
+    accent2: params.get("accent2") || "",
+    glow: params.get("glow") || "",
+    source: "hash"
+  });
 
   const title = params.get("title");
   const subtitle = params.get("subtitle");
@@ -339,12 +339,16 @@ window.addEventListener("message", (ev) => {
   const data = ev.data;
   if (!data) return;
 
+  console.log("MESSAGE RECEIVED:", data);
+
   if (data.type === "IDP_DASH_INIT" || data.type === "PLAYER_IDP_INIT" || data.type === "DASH_INIT") {
-    const clubSlug = data.clubSlug || "default";
-    const accent = data.theme?.accent || "";
-    const accent2 = data.theme?.accent2 || "";
-    const glow = data.theme?.glow || "";
-    applyTheme({ clubSlug, accent, accent2, glow, source: "postMessage" });
+    applyTheme({
+      clubSlug: data.clubSlug || "default",
+      accent: data.theme?.accent || "",
+      accent2: data.theme?.accent2 || "",
+      glow: data.theme?.glow || "",
+      source: "postMessage"
+    });
 
     const header = clean(data.title || "");
     const subtitle = clean(data.subtitle || data.coachName || "");
@@ -353,13 +357,10 @@ window.addEventListener("message", (ev) => {
   }
 });
 
-/* -------------------------------------------------------
-   Navigation: send to parent (Wix) so it navigates properly
-------------------------------------------------------- */
 function nav(url){
-  try{
+  try {
     window.parent.postMessage({ type:"NAVIGATE", url }, "*");
-  }catch(e){
+  } catch(e) {
     console.log("NAV postMessage failed:", e);
   }
 }
@@ -372,7 +373,10 @@ function wire(elId, url){
 
   el.addEventListener("click", fire);
   el.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fire(); }
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      fire();
+    }
   });
 }
 
