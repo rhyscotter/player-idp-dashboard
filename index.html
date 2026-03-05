@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Individual Development Planner</title>
+
+<style>
+:root{
+  --bg:#000; --card:#111; --border:#1e1e1e; --text:#fff; --muted:#8a8a8a;
+  --accent:#7B2EFF; --accent2:#B266FF;
+  --clubGlow: rgba(123,46,255,.18);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#000;
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+
+.stage{
+  min-height:100vh;
+  width:100%;
+  padding:40px 50px;
+
+  background:
+    radial-gradient(1200px 700px at 20% -10%, rgba(255,255,255,.05), transparent 60%),
+    linear-gradient(180deg,#000 0%,#050505 100%);
+
+  position:relative;
+  overflow:hidden;
+}
+
+.stage::before{
+  content:"";
+  position:absolute;
+  inset:-40% -20%;
+  transform:rotate(-14deg);
+
+  background:linear-gradient(
+    90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.05),
+    rgba(255,255,255,0)
+  );
+
+  opacity:.18;
+  pointer-events:none;
+}
+
+.wrap{
+  width:100%;
+  position:relative;
+  z-index:2;
+}
+
+.teamName{
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:54px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  line-height:1;
+}
+
+.sub{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:16px;
+}
+
+.themeLine{
+  margin-top:18px;
+  height:5px;
+  border-radius:999px;
+
+  background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
+
+  box-shadow:0 0 18px color-mix(in srgb, var(--accent) 35%, transparent);
+
+  position:relative;
+  overflow:hidden;
+}
+
+.themeLine::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:linear-gradient(
+    120deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.35),
+    rgba(255,255,255,0)
+  );
+
+  transform:translateX(-70%);
+  animation:sweep 2.8s linear infinite;
+}
+
+@keyframes sweep{
+  0%{transform:translateX(-70%)}
+  100%{transform:translateX(70%)}
+}
+
+.card{
+  margin-top:26px;
+
+  background:rgba(17,17,17,.9);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+
+  padding:26px;
+
+  position:relative;
+  overflow:hidden;
+
+  box-shadow:0 20px 70px rgba(0,0,0,.58);
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-50% -20%;
+  transform:rotate(-12deg);
+
+  background:linear-gradient(
+    90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.05),
+    rgba(255,255,255,0)
+  );
+
+  opacity:.28;
+  pointer-events:none;
+}
+
+.hRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+}
+
+.hTitle{
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:30px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin:0;
+}
+
+.pill{
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+
+  padding:8px 12px;
+  border-radius:999px;
+
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.04);
+}
+
+.pill.accent{
+  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
+  background:color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.meta{
+  margin-top:14px;
+  color:rgba(255,255,255,.75);
+  font-size:15px;
+  line-height:1.5;
+}
+
+.grid{
+  margin-top:26px;
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  gap:20px;
+}
+
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr}
+}
+
+.actionCard{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.22);
+
+  border-radius:16px;
+
+  padding:28px;
+
+  min-height:160px;
+
+  transition:.2s;
+
+  cursor:pointer;
+}
+
+.actionCard:hover{
+  transform:translateY(-3px);
+
+  border-color:color-mix(
+    in srgb,
+    var(--accent) 45%,
+    rgba(255,255,255,.12)
+  );
+
+  background:color-mix(
+    in srgb,
+    var(--accent) 10%,
+    rgba(0,0,0,.22)
+  );
+}
+
+.actionTop{
+  display:flex;
+  justify-content:space-between;
+}
+
+.actionTitle{
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:26px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin:0;
+}
+
+.badge{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+
+  padding:7px 10px;
+  border-radius:999px;
+
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.04);
+}
+
+.badge.go{
+  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
+  background:color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.actionText{
+  margin-top:12px;
+  color:rgba(255,255,255,.68);
+  font-size:15px;
+  line-height:1.45;
+}
+
+.arrow{
+  margin-top:16px;
+  height:3px;
+  border-radius:999px;
+
+  background:linear-gradient(
+    90deg,
+    var(--accent),
+    var(--accent2)
+  );
+
+  opacity:.8;
+}
+
+.smallLine{
+  height:3px;
+  border-radius:999px;
+
+  margin-top:28px;
+
+  background:linear-gradient(
+    90deg,
+    var(--accent),
+    var(--accent2)
+  );
+}
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+<div class="wrap">
+
+<div class="teamName">Individual Development Planner</div>
+
+<div class="sub">
+Create new development plans and review existing player IDPs.
+</div>
+
+<div class="themeLine"></div>
+
+<div class="card">
+
+<div class="hRow">
+<h3 class="hTitle">IDP Dashboard</h3>
+<div class="pill accent">Ready</div>
+</div>
+
+<div class="meta">
+Choose an option below to begin creating a new Individual Development Plan or review existing plans.
+</div>
+
+<div class="grid">
+
+<div class="actionCard" id="createIDP">
+<div class="actionTop">
+<h4 class="actionTitle">Create IDP</h4>
+<div class="badge go">Open</div>
+</div>
+
+<div class="actionText">
+Start a new Individual Development Plan for a player and define their key development priorities.
+</div>
+
+<div class="arrow"></div>
+</div>
+
+
+<div class="actionCard" id="myIDPs">
+<div class="actionTop">
+<h4 class="actionTitle">My IDP's</h4>
+<div class="badge go">View</div>
+</div>
+
+<div class="actionText">
+View and manage all previously created development plans and track progress over time.
+</div>
+
+<div class="arrow"></div>
+</div>
+
+</div>
+
+<div class="smallLine"></div>
+
+</div>
+</div>
+</div>
+
+<script>
+
+document.getElementById("createIDP").onclick = () => {
+  window.location.href = "/player-idp";
+};
+
+document.getElementById("myIDPs").onclick = () => {
+  window.location.href = "/player-idps/";
+};
+
+</script>
+
+</body>
+</html>
