@@ -25,11 +25,9 @@ body{
   min-height:100vh;
   width:100%;
   padding:40px 50px;
-
   background:
     radial-gradient(1200px 700px at 20% -10%, rgba(255,255,255,.05), transparent 60%),
     linear-gradient(180deg,#000 0%,#050505 100%);
-
   position:relative;
   overflow:hidden;
 }
@@ -39,14 +37,12 @@ body{
   position:absolute;
   inset:-40% -20%;
   transform:rotate(-14deg);
-
   background:linear-gradient(
     90deg,
     rgba(255,255,255,0),
     rgba(255,255,255,.05),
     rgba(255,255,255,0)
   );
-
   opacity:.18;
   pointer-events:none;
 }
@@ -75,11 +71,8 @@ body{
   margin-top:18px;
   height:5px;
   border-radius:999px;
-
   background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
-
   box-shadow:0 0 18px color-mix(in srgb, var(--accent) 35%, transparent);
-
   position:relative;
   overflow:hidden;
 }
@@ -88,14 +81,12 @@ body{
   content:"";
   position:absolute;
   inset:0;
-
   background:linear-gradient(
     120deg,
     rgba(255,255,255,0),
     rgba(255,255,255,.35),
     rgba(255,255,255,0)
   );
-
   transform:translateX(-70%);
   animation:sweep 2.8s linear infinite;
 }
@@ -107,16 +98,12 @@ body{
 
 .card{
   margin-top:26px;
-
   background:rgba(17,17,17,.9);
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-
   padding:26px;
-
   position:relative;
   overflow:hidden;
-
   box-shadow:0 20px 70px rgba(0,0,0,.58);
 }
 
@@ -125,14 +112,12 @@ body{
   position:absolute;
   inset:-50% -20%;
   transform:rotate(-12deg);
-
   background:linear-gradient(
     90deg,
     rgba(255,255,255,0),
     rgba(255,255,255,.05),
     rgba(255,255,255,0)
   );
-
   opacity:.28;
   pointer-events:none;
 }
@@ -156,10 +141,8 @@ body{
   font-weight:900;
   letter-spacing:.8px;
   text-transform:uppercase;
-
   padding:8px 12px;
   border-radius:999px;
-
   border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.04);
 }
@@ -178,10 +161,8 @@ body{
 
 .grid{
   margin-top:26px;
-
   display:grid;
   grid-template-columns:1fr 1fr;
-
   gap:20px;
 }
 
@@ -192,32 +173,17 @@ body{
 .actionCard{
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.22);
-
   border-radius:16px;
-
   padding:28px;
-
   min-height:160px;
-
   transition:.2s;
-
   cursor:pointer;
 }
 
 .actionCard:hover{
   transform:translateY(-3px);
-
-  border-color:color-mix(
-    in srgb,
-    var(--accent) 45%,
-    rgba(255,255,255,.12)
-  );
-
-  background:color-mix(
-    in srgb,
-    var(--accent) 10%,
-    rgba(0,0,0,.22)
-  );
+  border-color:color-mix(in srgb, var(--accent) 45%, rgba(255,255,255,.12));
+  background:color-mix(in srgb, var(--accent) 10%, rgba(0,0,0,.22));
 }
 
 .actionTop{
@@ -238,10 +204,8 @@ body{
   font-weight:900;
   letter-spacing:.7px;
   text-transform:uppercase;
-
   padding:7px 10px;
   border-radius:999px;
-
   border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.04);
 }
@@ -262,103 +226,160 @@ body{
   margin-top:16px;
   height:3px;
   border-radius:999px;
-
-  background:linear-gradient(
-    90deg,
-    var(--accent),
-    var(--accent2)
-  );
-
+  background:linear-gradient(90deg, var(--accent), var(--accent2));
   opacity:.8;
 }
 
 .smallLine{
   height:3px;
   border-radius:999px;
-
   margin-top:28px;
-
-  background:linear-gradient(
-    90deg,
-    var(--accent),
-    var(--accent2)
-  );
+  background:linear-gradient(90deg, var(--accent), var(--accent2));
 }
 </style>
 </head>
 
 <body>
-
 <div class="stage">
-<div class="wrap">
+  <div class="wrap">
 
-<div class="teamName">Individual Development Planner</div>
+    <div class="teamName" id="teamName">Individual Development Planner</div>
+    <div class="sub" id="sub">Create new development plans and review existing player IDPs.</div>
+    <div class="themeLine" aria-hidden="true"></div>
 
-<div class="sub">
-Create new development plans and review existing player IDPs.
-</div>
+    <div class="card">
+      <div class="hRow">
+        <h3 class="hTitle">IDP Dashboard</h3>
+        <div class="pill accent" id="statusPill">Ready</div>
+      </div>
 
-<div class="themeLine"></div>
+      <div class="meta">
+        Choose an option below to begin creating a new Individual Development Plan or review existing plans.
+      </div>
 
-<div class="card">
+      <div class="grid">
 
-<div class="hRow">
-<h3 class="hTitle">IDP Dashboard</h3>
-<div class="pill accent">Ready</div>
-</div>
+        <div class="actionCard" id="createIDP" role="button" tabindex="0" aria-label="Create IDP">
+          <div class="actionTop">
+            <h4 class="actionTitle">Create IDP</h4>
+            <div class="badge go">Open</div>
+          </div>
+          <div class="actionText">
+            Start a new Individual Development Plan for a player and define their key development priorities.
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+        </div>
 
-<div class="meta">
-Choose an option below to begin creating a new Individual Development Plan or review existing plans.
-</div>
+        <div class="actionCard" id="myIDPs" role="button" tabindex="0" aria-label="My IDPs">
+          <div class="actionTop">
+            <h4 class="actionTitle">My IDP's</h4>
+            <div class="badge go">View</div>
+          </div>
+          <div class="actionText">
+            View and manage all previously created development plans and track progress over time.
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+        </div>
 
-<div class="grid">
+      </div>
 
-<div class="actionCard" id="createIDP">
-<div class="actionTop">
-<h4 class="actionTitle">Create IDP</h4>
-<div class="badge go">Open</div>
-</div>
+      <div class="smallLine"></div>
+    </div>
 
-<div class="actionText">
-Start a new Individual Development Plan for a player and define their key development priorities.
-</div>
-
-<div class="arrow"></div>
-</div>
-
-
-<div class="actionCard" id="myIDPs">
-<div class="actionTop">
-<h4 class="actionTitle">My IDP's</h4>
-<div class="badge go">View</div>
-</div>
-
-<div class="actionText">
-View and manage all previously created development plans and track progress over time.
-</div>
-
-<div class="arrow"></div>
-</div>
-
-</div>
-
-<div class="smallLine"></div>
-
-</div>
-</div>
+  </div>
 </div>
 
 <script>
-
-document.getElementById("createIDP").onclick = () => {
-  window.location.href = "/player-idp";
+/* -------------------------------------------------------
+   Theme system (hash + postMessage init)
+------------------------------------------------------- */
+const CLUB_THEMES = {
+  default: { accent:"#7B2EFF", accent2:"#B266FF", bgGlow:"rgba(123,46,255,.18)" },
+  cherrybrook: { accent:"#C8102E", accent2:"#FF4B5C", bgGlow:"rgba(200,16,46,.20)" },
+  rumson: { accent:"#FFFFFF", accent2:"#BDBDBD", bgGlow:"rgba(255,255,255,.10)" },
+  monmouth: { accent:"#00E5FF", accent2:"#00A3FF", bgGlow:"rgba(0,229,255,.18)" }
 };
 
-document.getElementById("myIDPs").onclick = () => {
-  window.location.href = "/player-idps/";
-};
+function clean(v){ return String(v || "").trim(); }
 
+function applyTheme({ clubSlug, accent, accent2, glow, source }) {
+  const slug = String(clubSlug || "default").trim().toLowerCase();
+  const fallback = CLUB_THEMES[slug] || CLUB_THEMES.default;
+
+  const finalAccent  = clean(accent)  || fallback.accent;
+  const finalAccent2 = clean(accent2) || fallback.accent2 || finalAccent;
+  const finalGlow    = clean(glow)    || fallback.bgGlow;
+
+  const r = document.documentElement.style;
+  r.setProperty("--accent", finalAccent);
+  r.setProperty("--accent2", finalAccent2);
+  r.setProperty("--clubGlow", finalGlow);
+
+  console.log("🎨 THEME APPLIED:", { slug, accent: finalAccent, accent2: finalAccent2, glow: finalGlow, source: source || "unknown" });
+}
+
+(function bootFromHash(){
+  const raw = (location.hash || "").replace(/^#/, "");
+  const params = new URLSearchParams(raw);
+
+  const clubSlug = params.get("clubSlug") || "default";
+  const accent = params.get("accent") || "";
+  const accent2 = params.get("accent2") || "";
+  const glow = params.get("glow") || "";
+
+  applyTheme({ clubSlug, accent, accent2, glow, source: "hash" });
+
+  const title = params.get("title");
+  const subtitle = params.get("subtitle");
+  if (title) document.getElementById("teamName").textContent = title;
+  if (subtitle) document.getElementById("sub").textContent = subtitle;
+})();
+
+window.addEventListener("message", (ev) => {
+  const data = ev.data;
+  if (!data) return;
+
+  if (data.type === "IDP_DASH_INIT" || data.type === "PLAYER_IDP_INIT" || data.type === "DASH_INIT") {
+    const clubSlug = data.clubSlug || "default";
+    const accent = data.theme?.accent || "";
+    const accent2 = data.theme?.accent2 || "";
+    const glow = data.theme?.glow || "";
+    applyTheme({ clubSlug, accent, accent2, glow, source: "postMessage" });
+
+    const header = clean(data.title || "");
+    const subtitle = clean(data.subtitle || data.coachName || "");
+    if (header) document.getElementById("teamName").textContent = header;
+    if (subtitle) document.getElementById("sub").textContent = subtitle;
+  }
+});
+
+/* -------------------------------------------------------
+   Navigation: send to parent (Wix) so it navigates properly
+------------------------------------------------------- */
+function nav(url){
+  try{
+    window.parent.postMessage({ type:"NAVIGATE", url }, "*");
+  }catch(e){
+    console.log("NAV postMessage failed:", e);
+  }
+}
+
+function wire(elId, url){
+  const el = document.getElementById(elId);
+  if (!el) return;
+
+  const fire = () => nav(url);
+
+  el.addEventListener("click", fire);
+  el.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fire(); }
+  });
+}
+
+wire("createIDP", "/player-idp");
+wire("myIDPs", "/player-idps/");
+
+try { window.parent.postMessage({ type:"IFRAME_READY" }, "*"); } catch(_) {}
 </script>
-
 </body>
 </html>
