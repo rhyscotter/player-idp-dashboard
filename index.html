@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Individual Development Planner</title>
-
+<title>My IDPs</title>
 <style>
 :root{
   --bg:#000;
@@ -15,307 +14,1052 @@
   --accent:#7B2EFF;
   --accent2:#B266FF;
   --clubGlow: rgba(123,46,255,.18);
+  --shadow: 0 20px 70px rgba(0,0,0,.58);
+  --radius: 16px;
 }
-
 *{box-sizing:border-box}
-
+html,body{height:100%}
 body{
   margin:0;
-  background:#000;
+  background:transparent;
   color:var(--text);
   font-family:Arial,sans-serif;
 }
-
+button,input,select,textarea{
+  font:inherit;
+}
 .stage{
   min-height:100vh;
-  width:100%;
-  padding:40px 50px;
+  padding:22px;
   background:
-    radial-gradient(1200px 700px at 20% -10%, var(--clubGlow), transparent 55%),
-    radial-gradient(1000px 600px at 80% 0%, rgba(255,255,255,.04), transparent 55%),
+    radial-gradient(1000px 600px at 20% -10%, rgba(255,255,255,.05), transparent 60%),
     linear-gradient(180deg,#000 0%,#050505 100%);
   position:relative;
   overflow:hidden;
 }
-
 .stage::before{
   content:"";
   position:absolute;
   inset:-40% -20%;
   transform:rotate(-14deg);
-  background:linear-gradient(
-    90deg,
-    rgba(255,255,255,0),
-    rgba(255,255,255,.05),
-    rgba(255,255,255,0)
-  );
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.05), rgba(255,255,255,0));
   opacity:.18;
   pointer-events:none;
 }
-
 .wrap{
-  width:100%;
+  max-width:1400px;
+  margin:0 auto;
   position:relative;
   z-index:2;
 }
-
 .teamName{
   font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
-  font-size:54px;
+  font-size:44px;
   text-transform:uppercase;
   letter-spacing:1px;
   line-height:1;
 }
-
 .sub{
-  margin-top:10px;
+  margin-top:8px;
   color:var(--muted);
-  font-size:16px;
+  font-size:14px;
 }
-
 .themeLine{
-  margin-top:18px;
-  height:5px;
+  margin-top:14px;
+  height:4px;
   border-radius:999px;
   background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
   box-shadow:0 0 18px color-mix(in srgb, var(--accent) 35%, transparent);
   position:relative;
   overflow:hidden;
 }
-
 .themeLine::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(
-    120deg,
-    rgba(255,255,255,0),
-    rgba(255,255,255,.35),
-    rgba(255,255,255,0)
-  );
+  background:linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,.35), rgba(255,255,255,0));
   transform:translateX(-70%);
   animation:sweep 2.8s linear infinite;
+  opacity:.9;
+  pointer-events:none;
 }
-
 @keyframes sweep{
   0%{transform:translateX(-70%)}
   100%{transform:translateX(70%)}
 }
 
-.card{
-  margin-top:26px;
-  background:rgba(17,17,17,.9);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  padding:26px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 20px 70px rgba(0,0,0,.58);
+/* CHANGED: stacked layout */
+.topGrid{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
 }
 
+.card{
+  background:rgba(17,17,17,.85);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:var(--radius);
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
 .card::before{
   content:"";
   position:absolute;
   inset:-50% -20%;
   transform:rotate(-12deg);
-  background:linear-gradient(
-    90deg,
-    rgba(255,255,255,0),
-    rgba(255,255,255,.05),
-    rgba(255,255,255,0)
-  );
+  background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.05), rgba(255,255,255,0));
   opacity:.28;
   pointer-events:none;
 }
-
 .hRow{
   display:flex;
   justify-content:space-between;
+  gap:12px;
   align-items:flex-start;
+  position:relative;
+  z-index:2;
 }
-
 .hTitle{
   font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
-  font-size:30px;
+  font-size:22px;
   text-transform:uppercase;
   letter-spacing:.8px;
   margin:0;
 }
 
-.pill{
-  font-size:12px;
+.statusBadge{
+  font-size:11px;
   font-weight:900;
   letter-spacing:.8px;
   text-transform:uppercase;
-  padding:8px 12px;
+  padding:8px 11px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.86);
+  white-space:nowrap;
+  transition:all .25s ease;
 }
-
-.pill.accent{
+.statusBadge.accent{
   border-color:color-mix(in srgb, var(--accent) 60%, transparent);
   background:color-mix(in srgb, var(--accent) 18%, transparent);
 }
+.statusBadge.is-syncing{
+  animation:pulseGlow 1s ease-in-out infinite;
+}
+.statusBadge.is-issue{
+  border-color:rgba(255,90,90,.45);
+  background:rgba(255,90,90,.14);
+  box-shadow:0 0 16px rgba(255,90,90,.16);
+}
+.statusBadge.is-good{
+  border-color:rgba(80,255,160,.45);
+  background:rgba(80,255,160,.14);
+  box-shadow:0 0 16px rgba(80,255,160,.18);
+}
+@keyframes pulseGlow{
+  0%{
+    transform:scale(1);
+    box-shadow:0 0 0 rgba(123,46,255,0);
+  }
+  50%{
+    transform:scale(1.04);
+    box-shadow:0 0 18px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  100%{
+    transform:scale(1);
+    box-shadow:0 0 0 rgba(123,46,255,0);
+  }
+}
 
 .meta{
-  margin-top:14px;
-  color:rgba(255,255,255,.75);
-  font-size:15px;
-  line-height:1.5;
-}
-
-.grid{
-  margin-top:26px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-}
-
-@media (max-width:900px){
-  .grid{grid-template-columns:1fr}
-}
-
-.actionCard{
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.22);
-  border-radius:16px;
-  padding:28px;
-  min-height:160px;
-  transition:.2s;
-  cursor:pointer;
-}
-
-.actionCard:hover{
-  transform:translateY(-3px);
-  border-color:color-mix(in srgb, var(--accent) 45%, rgba(255,255,255,.12));
-  background:color-mix(in srgb, var(--accent) 10%, rgba(0,0,0,.22));
-}
-
-.actionTop{
-  display:flex;
-  justify-content:space-between;
-}
-
-.actionTitle{
-  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
-  font-size:26px;
-  text-transform:uppercase;
-  letter-spacing:.6px;
-  margin:0;
-}
-
-.badge{
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.7px;
-  text-transform:uppercase;
-  padding:7px 10px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.04);
-}
-
-.badge.go{
-  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
-  background:color-mix(in srgb, var(--accent) 14%, transparent);
-}
-
-.actionText{
-  margin-top:12px;
-  color:rgba(255,255,255,.68);
-  font-size:15px;
+  margin-top:10px;
+  color:rgba(255,255,255,.72);
+  font-size:13px;
   line-height:1.45;
+  position:relative;
+  z-index:2;
 }
-
-.arrow{
-  margin-top:16px;
-  height:3px;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  opacity:.8;
-}
-
 .smallLine{
   height:3px;
   border-radius:999px;
-  margin-top:28px;
+  margin-top:16px;
+  width:calc(100% + 32px);
+  margin-left:-16px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 14px color-mix(in srgb, var(--accent) 45%, transparent);
+  opacity:.9;
+  position:relative;
+  z-index:2;
+}
+
+/* keep toolbar in one wide row when possible */
+.toolbar{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1.5fr 1fr 1fr auto auto;
+  gap:10px;
+  position:relative;
+  z-index:2;
+}
+@media (max-width: 980px){
+  .toolbar{
+    grid-template-columns:1fr 1fr;
+  }
+}
+@media (max-width: 640px){
+  .toolbar{
+    grid-template-columns:1fr;
+  }
+}
+
+.field{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  border-radius:14px;
+  padding:12px;
+}
+.label{
+  display:inline-block;
+  position:relative;
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin:0;
+  color:#fff;
+  padding-bottom:8px;
+}
+.label::before{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:34px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  opacity:.55;
+  transform-origin:left center;
+  transform:scaleX(.72);
+  transition:transform .28s ease,width .28s ease,opacity .28s ease,box-shadow .28s ease;
+}
+.label::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:18px;
+  height:2px;
+  border-radius:999px;
+  background:rgba(255,255,255,.95);
+  opacity:.9;
+  filter:blur(.2px);
+  transform:translateX(0);
+  transition:transform .42s ease,opacity .28s ease;
+}
+.field:hover .label::before,
+.field:focus-within .label::before,
+.field.has-value .label::before{
+  width:72px;
+  opacity:1;
+  transform:scaleX(1);
+  box-shadow:0 0 12px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.field:hover .label::after,
+.field:focus-within .label::after,
+.field.has-value .label::after{
+  transform:translateX(46px);
+  opacity:1;
+}
+
+.input, .sel{
+  width:100%;
+  margin-top:8px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.92);
+  border-radius:12px;
+  padding:10px 10px;
+  outline:none;
+  font-size:14px;
+  transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.input::placeholder{
+  color:rgba(255,255,255,.42);
+}
+.input:focus, .sel:focus{
+  border-color:color-mix(in srgb, var(--accent) 58%, rgba(255,255,255,.12));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
+    0 0 18px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.btn{
+  cursor:pointer;
+  border:none;
+  border-radius:14px;
+  padding:11px 14px;
+  font-weight:900;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  color:#fff;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 12px 26px color-mix(in srgb, var(--accent) 25%, transparent);
+  transition:transform .15s ease, filter .15s ease, opacity .2s ease;
+  min-height:48px;
+}
+.btn:hover{
+  transform:translateY(-1px);
+  filter:saturate(1.15);
+}
+.btn.secondary{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:none;
+}
+.btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* CHANGED: bigger top section */
+.listWrap{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(420px, 1fr));
+  gap:14px;
+  position:relative;
+  z-index:2;
+  max-height:none;
+  overflow:visible;
+  padding-right:0;
+}
+@media (max-width: 520px){
+  .listWrap{
+    grid-template-columns:1fr;
+  }
+}
+
+.idpItem{
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border-radius:20px;
+  padding:22px 22px 22px 26px;
+  cursor:pointer;
+  transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  position:relative;
+  overflow:hidden;
+  min-height:260px;
+  text-align:left;
+}
+.idpItem::before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:5px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2));
+  opacity:.95;
+}
+.idpItem:hover{
+  transform:translateY(-1px);
+  border-color:color-mix(in srgb, var(--accent) 40%, rgba(255,255,255,.10));
+  box-shadow:0 12px 28px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.idpItem.active{
+  border-color:color-mix(in srgb, var(--accent) 65%, rgba(255,255,255,.10));
+  background:color-mix(in srgb, var(--accent) 10%, rgba(255,255,255,.03));
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
+             0 18px 30px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.itemTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.itemName{
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:32px;
+  text-transform:uppercase;
+  line-height:1;
+  letter-spacing:.6px;
+}
+.itemDate{
+  font-size:13px;
+  color:rgba(255,255,255,.72);
+  white-space:nowrap;
+}
+.itemMeta{
+  margin-top:10px;
+  color:rgba(255,255,255,.76);
+  font-size:14px;
+  line-height:1.5;
+}
+.itemFocus{
+  margin-top:16px;
+  color:#fff;
+  font-size:16px;
+  line-height:1.7;
+  white-space:normal;
+}
+.itemSection{
+  margin-top:14px;
+  color:rgba(255,255,255,.86);
+  font-size:15px;
+  line-height:1.7;
+  white-space:normal;
+}
+.itemSection strong{
+  color:#fff;
+}
+.itemTags{
+  margin-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.tag{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  padding:6px 9px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.82);
+}
+
+.empty{
+  margin-top:14px;
+  border:1px dashed rgba(255,255,255,.14);
+  border-radius:18px;
+  padding:26px 18px;
+  color:rgba(255,255,255,.7);
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+
+.detailsGrid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  position:relative;
+  z-index:2;
+}
+@media (max-width: 900px){
+  .detailsGrid{
+    grid-template-columns:1fr;
+  }
+}
+.detailBlock{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  border-radius:14px;
+  padding:12px;
+}
+.detailBlock.span2{
+  grid-column:1 / -1;
+}
+.detailLabel{
+  display:inline-block;
+  position:relative;
+  font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin:0;
+  color:#fff;
+  padding-bottom:8px;
+}
+.detailLabel::before{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:60px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 10px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.detailValue{
+  margin-top:10px;
+  white-space:pre-wrap;
+  color:rgba(255,255,255,.9);
+  line-height:1.55;
+  font-size:14px;
+}
+.detailMini{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media (max-width:700px){
+  .detailMini{
+    grid-template-columns:1fr;
+  }
+}
+
+.headerInfo{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.infoPill{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.84);
+}
+
+.actions{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  position:relative;
+  z-index:2;
 }
 </style>
 </head>
-
 <body>
 <div class="stage">
   <div class="wrap">
-    <div class="teamName" id="teamName">Individual Development Planner</div>
-    <div class="sub" id="sub">Create new development plans and review existing player IDPs.</div>
+    <div class="teamName" id="teamName">My IDPs</div>
+    <div class="sub" id="sub">View saved development plans, search players, and open full IDP details.</div>
     <div class="themeLine" aria-hidden="true"></div>
 
-    <div class="card">
-      <div class="hRow">
-        <h3 class="hTitle">IDP Dashboard</h3>
-        <div class="pill accent" id="statusPill">Ready</div>
-      </div>
-
-      <div class="meta">
-        Choose an option below to begin creating a new Individual Development Plan or review existing plans.
-      </div>
-
-      <div class="grid">
-        <div class="actionCard" id="createIDP" role="button" tabindex="0" aria-label="Create IDP">
-          <div class="actionTop">
-            <h4 class="actionTitle">Create IDP</h4>
-            <div class="badge go">Open</div>
-          </div>
-          <div class="actionText">
-            Start a new Individual Development Plan for a player and define their key development priorities.
-          </div>
-          <div class="arrow" aria-hidden="true"></div>
+    <div class="topGrid">
+      <div class="card">
+        <div class="hRow">
+          <h3 class="hTitle">Saved IDPs</h3>
+          <div class="statusBadge accent" id="statusPill">Review</div>
         </div>
 
-        <div class="actionCard" id="myIDPs" role="button" tabindex="0" aria-label="My IDPs">
-          <div class="actionTop">
-            <h4 class="actionTitle">My IDP's</h4>
-            <div class="badge go">View</div>
-          </div>
-          <div class="actionText">
-            View and manage all previously created development plans and track progress over time.
-          </div>
-          <div class="arrow" aria-hidden="true"></div>
+        <div class="meta" id="listMeta">
+          All saved individual development plans assigned to this coach will appear here.
         </div>
+
+        <div class="smallLine"></div>
+
+        <div class="toolbar">
+          <div class="field">
+            <div class="label">Search</div>
+            <input class="input" id="searchInput" placeholder="Search by player, focus, notes, or team" />
+          </div>
+
+          <div class="field">
+            <div class="label">Team</div>
+            <select class="sel" id="teamFilter">
+              <option value="">All teams</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label">Sort</div>
+            <select class="sel" id="sortBy">
+              <option value="date-desc">Newest first</option>
+              <option value="date-asc">Oldest first</option>
+              <option value="player-asc">Player A–Z</option>
+              <option value="player-desc">Player Z–A</option>
+            </select>
+          </div>
+
+          <button class="btn secondary" id="btnClear" type="button">Clear</button>
+          <button class="btn" id="btnRefresh" type="button">Refresh</button>
+        </div>
+
+        <div id="listWrap" class="listWrap"></div>
+        <div id="emptyState" class="empty" style="display:none;">No IDPs found.</div>
       </div>
 
-      <div class="smallLine"></div>
+      <div class="card">
+        <div class="hRow">
+          <h3 class="hTitle">IDP Details</h3>
+          <div class="statusBadge" id="detailPill">No selection</div>
+        </div>
+
+        <div class="meta" id="detailMeta">
+          Select an IDP from above to view the full development plan.
+        </div>
+
+        <div class="smallLine"></div>
+
+        <div id="detailEmpty" class="empty">
+          Choose a saved IDP above to view its full details here.
+        </div>
+
+        <div id="detailPanel" style="display:none;">
+          <div class="headerInfo" id="headerInfo"></div>
+
+          <div class="detailsGrid">
+            <div class="detailBlock span2">
+              <div class="detailLabel">Primary Focus</div>
+              <div class="detailValue" id="dFocus">—</div>
+            </div>
+
+            <div class="detailBlock">
+              <div class="detailLabel">Strengths</div>
+              <div class="detailValue" id="dStrengths">—</div>
+            </div>
+
+            <div class="detailBlock">
+              <div class="detailLabel">Areas to Improve</div>
+              <div class="detailValue" id="dImprovements">—</div>
+            </div>
+
+            <div class="detailBlock span2">
+              <div class="detailLabel">Weekly Targets</div>
+              <div class="detailValue" id="dTargets">—</div>
+            </div>
+
+            <div class="detailBlock span2">
+              <div class="detailLabel">Coach Notes</div>
+              <div class="detailValue" id="dNotes">—</div>
+            </div>
+
+            <div class="detailBlock">
+              <div class="detailLabel">Player ID</div>
+              <div class="detailValue" id="dPlayerId">—</div>
+            </div>
+
+            <div class="detailBlock">
+              <div class="detailLabel">Team ID</div>
+              <div class="detailValue" id="dTeamId">—</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn secondary" id="btnOpenCreator" type="button">Open in Creator</button>
+            <button class="btn" id="btnRequestEdit" type="button">Edit IDP</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 const CLUB_THEMES = {
-  default: { accent:"#7B2EFF", accent2:"#B266FF", bgGlow:"rgba(123,46,255,.18)" },
-  cherrybrook: { accent:"#C8102E", accent2:"#FF4B5C", bgGlow:"rgba(200,16,46,.20)" },
-  rumson: { accent:"#FFFFFF", accent2:"#BDBDBD", bgGlow:"rgba(255,255,255,.10)" },
-  monmouth: { accent:"#00E5FF", accent2:"#00A3FF", bgGlow:"rgba(0,229,255,.18)" }
+  default:    { accent:"#7B2EFF", accent2:"#B266FF", bgGlow:"rgba(123,46,255,.18)" },
+  cherrybrook:{ accent:"#C8102E", accent2:"#FF4B5C", bgGlow:"rgba(200,16,46,.20)" },
+  rumson:     { accent:"#FFFFFF", accent2:"#BDBDBD", bgGlow:"rgba(255,255,255,.10)" },
+  monmouth:   { accent:"#00E5FF", accent2:"#00A3FF", bgGlow:"rgba(0,229,255,.18)" }
+};
+
+let ALL_IDPS = [];
+let FILTERED_IDPS = [];
+let ACTIVE_IDP_ID = "";
+let CURRENT_CONTEXT = {
+  coachId: "",
+  coachName: "",
+  clubSlug: "default"
 };
 
 function clean(v){ return String(v || "").trim(); }
+function lower(v){ return clean(v).toLowerCase(); }
+function safe(v, fallback="—"){ return clean(v) || fallback; }
+
+function setPill(text, mode = "normal"){
+  const el = document.getElementById("statusPill");
+  if (!el) return;
+  el.textContent = text;
+  el.classList.remove("is-syncing", "is-issue", "is-good");
+  if (mode === "syncing") el.classList.add("is-syncing");
+  if (mode === "issue") el.classList.add("is-issue");
+  if (mode === "good") el.classList.add("is-good");
+}
+
+function setDetailPill(text){
+  const el = document.getElementById("detailPill");
+  if (!el) return;
+  el.textContent = text;
+}
 
 function applyTheme({ clubSlug, accent, accent2, glow, source }) {
   const slug = String(clubSlug || "default").trim().toLowerCase();
   const fallback = CLUB_THEMES[slug] || CLUB_THEMES.default;
 
-  const finalAccent  = clean(accent) || fallback.accent;
+  const finalAccent  = clean(accent)  || fallback.accent;
   const finalAccent2 = clean(accent2) || fallback.accent2 || finalAccent;
-  const finalGlow    = clean(glow) || fallback.bgGlow;
+  const finalGlow    = clean(glow)    || fallback.bgGlow;
 
   const r = document.documentElement.style;
   r.setProperty("--accent", finalAccent);
   r.setProperty("--accent2", finalAccent2);
   r.setProperty("--clubGlow", finalGlow);
 
-  console.log("THEME APPLIED:", { slug, finalAccent, finalAccent2, finalGlow, source });
+  console.log("MY IDP theme applied:", { slug, finalAccent, finalAccent2, finalGlow, source });
 }
+
+function syncFieldValueState(el){
+  const field = el && el.closest(".field");
+  if (!field) return;
+  field.classList.toggle("has-value", clean(el.value).length > 0);
+}
+
+function bindFieldTitleAnimations(){
+  document.querySelectorAll(".input, .sel").forEach((el) => {
+    const sync = () => syncFieldValueState(el);
+    el.addEventListener("input", sync);
+    el.addEventListener("change", sync);
+    el.addEventListener("blur", sync);
+    sync();
+  });
+}
+
+function formatDate(v){
+  const raw = clean(v);
+  if (!raw) return "No date";
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return raw;
+  return d.toLocaleDateString(undefined, {
+    year:"numeric",
+    month:"short",
+    day:"numeric"
+  });
+}
+
+function shorten(text, max = 240){
+  const s = clean(text);
+  if (!s) return "—";
+  if (s.length <= max) return s;
+  return s.slice(0, max).trim() + "…";
+}
+
+function normalizeIdp(item = {}){
+  return {
+    id: clean(item.id || item._id),
+    playerName: clean(item.playerName),
+    idpDate: clean(item.idpDate),
+    playerId: clean(item.playerId),
+    teamId: clean(item.teamId),
+    teamName: clean(item.teamName),
+    primaryFocus: clean(item.primaryFocus),
+    strengths: clean(item.strengths),
+    improvements: clean(item.improvements),
+    targets: clean(item.targets),
+    notes: clean(item.notes),
+    coachId: clean(item.coachId),
+    coachName: clean(item.coachName),
+    createdAt: clean(item.createdAt || item._createdDate),
+    updatedAt: clean(item.updatedAt || item._updatedDate)
+  };
+}
+
+function setTeamFilterOptions(idps = []){
+  const sel = document.getElementById("teamFilter");
+  if (!sel) return;
+
+  const current = clean(sel.value);
+  const map = new Map();
+
+  idps.forEach(item => {
+    const key = clean(item.teamId);
+    const label = clean(item.teamName) || clean(item.teamId);
+    if (key) map.set(key, label || key);
+  });
+
+  const options = [...map.entries()].sort((a,b) => a[1].localeCompare(b[1]));
+
+  sel.innerHTML = `<option value="">All teams</option>`;
+  options.forEach(([id, name]) => {
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = name;
+    sel.appendChild(opt);
+  });
+
+  if ([...sel.options].some(o => o.value === current)) {
+    sel.value = current;
+  }
+
+  syncFieldValueState(sel);
+}
+
+function getSearchableBlob(item){
+  return [
+    item.playerName,
+    item.primaryFocus,
+    item.teamName,
+    item.teamId,
+    item.playerId,
+    item.notes,
+    item.targets,
+    item.strengths,
+    item.improvements
+  ].map(lower).join(" ");
+}
+
+function sortIdps(items, sortBy){
+  const arr = [...items];
+  arr.sort((a,b) => {
+    if (sortBy === "player-asc") return a.playerName.localeCompare(b.playerName);
+    if (sortBy === "player-desc") return b.playerName.localeCompare(a.playerName);
+
+    const da = new Date(a.idpDate || a.createdAt || 0).getTime() || 0;
+    const db = new Date(b.idpDate || b.createdAt || 0).getTime() || 0;
+
+    if (sortBy === "date-asc") return da - db;
+    return db - da;
+  });
+  return arr;
+}
+
+function filterAndRender(){
+  const q = lower(document.getElementById("searchInput").value);
+  const team = clean(document.getElementById("teamFilter").value);
+  const sortBy = clean(document.getElementById("sortBy").value) || "date-desc";
+
+  FILTERED_IDPS = ALL_IDPS.filter(item => {
+    if (team && clean(item.teamId) !== team) return false;
+    if (q && !getSearchableBlob(item).includes(q)) return false;
+    return true;
+  });
+
+  FILTERED_IDPS = sortIdps(FILTERED_IDPS, sortBy);
+
+  renderList(FILTERED_IDPS);
+
+  const activeStillExists = FILTERED_IDPS.find(x => x.id === ACTIVE_IDP_ID);
+  if (activeStillExists) {
+    renderDetails(activeStillExists);
+  } else if (FILTERED_IDPS.length) {
+    ACTIVE_IDP_ID = FILTERED_IDPS[0].id;
+    renderList(FILTERED_IDPS);
+    renderDetails(FILTERED_IDPS[0]);
+  } else {
+    ACTIVE_IDP_ID = "";
+    renderEmptyDetails();
+  }
+
+  const meta = document.getElementById("listMeta");
+  if (meta) {
+    meta.textContent = FILTERED_IDPS.length === ALL_IDPS.length
+      ? `${ALL_IDPS.length} saved IDP${ALL_IDPS.length === 1 ? "" : "s"} found.`
+      : `${FILTERED_IDPS.length} of ${ALL_IDPS.length} IDP${ALL_IDPS.length === 1 ? "" : "s"} shown.`;
+  }
+}
+
+function renderList(items = []){
+  const wrap = document.getElementById("listWrap");
+  const empty = document.getElementById("emptyState");
+  if (!wrap || !empty) return;
+
+  wrap.innerHTML = "";
+
+  if (!items.length) {
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  items.forEach(item => {
+    const div = document.createElement("button");
+    div.type = "button";
+    div.className = "idpItem" + (item.id === ACTIVE_IDP_ID ? " active" : "");
+    div.setAttribute("data-id", item.id);
+
+    div.innerHTML = `
+      <div class="itemTop">
+        <div>
+          <div class="itemName">${escapeHtml(safe(item.playerName, "Unnamed Player"))}</div>
+          <div class="itemMeta">${escapeHtml(safe(item.teamName || item.teamId, "No team"))}</div>
+        </div>
+        <div class="itemDate">${escapeHtml(formatDate(item.idpDate || item.createdAt))}</div>
+      </div>
+
+      <div class="itemFocus"><strong>Primary Focus:</strong> ${escapeHtml(shorten(item.primaryFocus, 260))}</div>
+
+      <div class="itemSection"><strong>Weekly Targets:</strong> ${escapeHtml(shorten(item.targets, 300))}</div>
+
+      <div class="itemSection"><strong>Coach Notes:</strong> ${escapeHtml(shorten(item.notes, 260))}</div>
+
+      <div class="itemTags">
+        ${item.playerId ? `<div class="tag">${escapeHtml(item.playerId)}</div>` : ""}
+        ${item.teamId ? `<div class="tag">${escapeHtml(item.teamId)}</div>` : ""}
+      </div>
+    `;
+
+    div.addEventListener("click", () => {
+      ACTIVE_IDP_ID = item.id;
+      renderList(FILTERED_IDPS);
+      renderDetails(item);
+
+      try {
+        window.parent.postMessage({
+          type: "MY_IDP_SELECTED",
+          idpId: item.id,
+          payload: item
+        }, "*");
+      } catch(_) {}
+    });
+
+    wrap.appendChild(div);
+  });
+}
+
+function renderEmptyDetails(){
+  document.getElementById("detailEmpty").style.display = "block";
+  document.getElementById("detailPanel").style.display = "none";
+  setDetailPill("No selection");
+  document.getElementById("detailMeta").textContent = "Select an IDP from above to view the full development plan.";
+}
+
+function renderDetails(item){
+  if (!item) return renderEmptyDetails();
+
+  document.getElementById("detailEmpty").style.display = "none";
+  document.getElementById("detailPanel").style.display = "block";
+
+  setDetailPill("Viewing");
+  document.getElementById("detailMeta").textContent =
+    `${safe(item.playerName)} • ${safe(item.teamName || item.teamId, "No team")} • ${formatDate(item.idpDate || item.createdAt)}`;
+
+  document.getElementById("dFocus").textContent = safe(item.primaryFocus);
+  document.getElementById("dStrengths").textContent = safe(item.strengths);
+  document.getElementById("dImprovements").textContent = safe(item.improvements);
+  document.getElementById("dTargets").textContent = safe(item.targets);
+  document.getElementById("dNotes").textContent = safe(item.notes);
+  document.getElementById("dPlayerId").textContent = safe(item.playerId);
+  document.getElementById("dTeamId").textContent = safe(item.teamId);
+
+  const headerInfo = document.getElementById("headerInfo");
+  headerInfo.innerHTML = `
+    <div class="infoPill">${escapeHtml(safe(item.playerName, "Player"))}</div>
+    <div class="infoPill">${escapeHtml(safe(item.teamName || item.teamId, "Team"))}</div>
+    <div class="infoPill">${escapeHtml(formatDate(item.idpDate || item.createdAt))}</div>
+    ${item.coachName ? `<div class="infoPill">${escapeHtml(item.coachName)}</div>` : ""}
+  `;
+
+  document.getElementById("btnOpenCreator").disabled = false;
+  document.getElementById("btnRequestEdit").disabled = false;
+}
+
+function setIdps(list = []){
+  ALL_IDPS = (Array.isArray(list) ? list : [])
+    .map(normalizeIdp)
+    .filter(x => x.id);
+
+  setTeamFilterOptions(ALL_IDPS);
+  filterAndRender();
+
+  setPill(ALL_IDPS.length ? "Ready" : "Empty", ALL_IDPS.length ? "good" : "normal");
+}
+
+function fillFromInit(data){
+  CURRENT_CONTEXT = {
+    coachId: clean(data.context?.coachId),
+    coachName: clean(data.context?.coachName),
+    clubSlug: clean(data.clubSlug || data.context?.clubSlug || "default")
+  };
+
+  if (clean(data.title)) document.getElementById("teamName").textContent = clean(data.title);
+  if (clean(data.sub)) document.getElementById("sub").textContent = clean(data.sub);
+
+  applyTheme({
+    clubSlug: data.clubSlug || "default",
+    accent: data.theme?.accent || "",
+    accent2: data.theme?.accent2 || "",
+    glow: data.theme?.glow || "",
+    source: "postMessage"
+  });
+
+  if (Array.isArray(data.idps)) {
+    setIdps(data.idps);
+  }
+}
+
+function requestRefresh(){
+  setPill("Review", "syncing");
+  try {
+    window.parent.postMessage({
+      type: "MY_IDP_REQUEST_LIST",
+      context: CURRENT_CONTEXT
+    }, "*");
+  } catch(e){
+    console.error(e);
+    setPill("Issue", "issue");
+  }
+}
+
+function clearFilters(){
+  document.getElementById("searchInput").value = "";
+  document.getElementById("teamFilter").value = "";
+  document.getElementById("sortBy").value = "date-desc";
+  bindFieldTitleAnimations();
+  filterAndRender();
+}
+
+function escapeHtml(str){
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+document.getElementById("searchInput").addEventListener("input", filterAndRender);
+document.getElementById("teamFilter").addEventListener("change", filterAndRender);
+document.getElementById("sortBy").addEventListener("change", filterAndRender);
+
+document.getElementById("btnClear").addEventListener("click", () => {
+  clearFilters();
+  setPill("Cleared");
+  setTimeout(() => setPill(ALL_IDPS.length ? "Ready" : "Empty", ALL_IDPS.length ? "good" : "normal"), 700);
+});
+
+document.getElementById("btnRefresh").addEventListener("click", () => {
+  requestRefresh();
+});
+
+document.getElementById("btnOpenCreator").addEventListener("click", () => {
+  const item = ALL_IDPS.find(x => x.id === ACTIVE_IDP_ID);
+  if (!item) return;
+
+  try {
+    window.parent.postMessage({
+      type: "MY_IDP_OPEN_CREATOR",
+      idpId: item.id,
+      payload: item
+    }, "*");
+  } catch(e){
+    console.error(e);
+  }
+});
+
+document.getElementById("btnRequestEdit").addEventListener("click", () => {
+  const item = ALL_IDPS.find(x => x.id === ACTIVE_IDP_ID);
+  if (!item) return;
+
+  try {
+    window.parent.postMessage({
+      type: "MY_IDP_EDIT",
+      idpId: item.id,
+      payload: item
+    }, "*");
+  } catch(e){
+    console.error(e);
+  }
+});
 
 (function bootFromHash(){
   const raw = (location.hash || "").replace(/^#/, "");
@@ -329,61 +1073,61 @@ function applyTheme({ clubSlug, accent, accent2, glow, source }) {
     source: "hash"
   });
 
-  const title = params.get("title");
-  const subtitle = params.get("subtitle");
-  if (title) document.getElementById("teamName").textContent = title;
-  if (subtitle) document.getElementById("sub").textContent = subtitle;
+  if (params.get("title")) document.getElementById("teamName").textContent = clean(params.get("title"));
+  if (params.get("sub")) document.getElementById("sub").textContent = clean(params.get("sub"));
 })();
 
 window.addEventListener("message", (ev) => {
   const data = ev.data;
-  if (!data) return;
+  if (!data || !data.type) return;
 
-  console.log("MESSAGE RECEIVED:", data);
+  console.log("MY IDP received message:", data);
 
-  if (data.type === "IDP_DASH_INIT" || data.type === "PLAYER_IDP_INIT" || data.type === "DASH_INIT") {
-    applyTheme({
-      clubSlug: data.clubSlug || "default",
-      accent: data.theme?.accent || "",
-      accent2: data.theme?.accent2 || "",
-      glow: data.theme?.glow || "",
-      source: "postMessage"
-    });
+  if (data.type === "MY_IDP_INIT") {
+    fillFromInit(data);
+    return;
+  }
 
-    const header = clean(data.title || "");
-    const subtitle = clean(data.subtitle || data.coachName || "");
-    if (header) document.getElementById("teamName").textContent = header;
-    if (subtitle) document.getElementById("sub").textContent = subtitle;
+  if (data.type === "MY_IDP_LIST") {
+    setIdps(data.idps || []);
+    return;
+  }
+
+  if (data.type === "MY_IDP_REFRESHED") {
+    setIdps(data.idps || []);
+    setPill("Updated", "good");
+    setTimeout(() => setPill(ALL_IDPS.length ? "Ready" : "Empty", ALL_IDPS.length ? "good" : "normal"), 900);
+    return;
+  }
+
+  if (data.type === "MY_IDP_SELECT_ID") {
+    const target = clean(data.idpId);
+    if (!target) return;
+    const found = ALL_IDPS.find(x => x.id === target);
+    if (!found) return;
+
+    ACTIVE_IDP_ID = found.id;
+    renderList(FILTERED_IDPS.length ? FILTERED_IDPS : ALL_IDPS);
+    renderDetails(found);
+    return;
+  }
+
+  if (data.type === "MY_IDP_ERROR") {
+    console.warn("MY IDP error:", data.error);
+    setPill("Issue", "issue");
+    return;
   }
 });
 
-function nav(url){
-  try {
-    window.parent.postMessage({ type:"NAVIGATE", url }, "*");
-  } catch(e) {
-    console.log("NAV postMessage failed:", e);
-  }
-}
+bindFieldTitleAnimations();
+renderEmptyDetails();
+setPill("Review", "syncing");
 
-function wire(elId, url){
-  const el = document.getElementById(elId);
-  if (!el) return;
-
-  const fire = () => nav(url);
-
-  el.addEventListener("click", fire);
-  el.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      fire();
-    }
-  });
-}
-
-wire("createIDP", "/player-idp");
-wire("myIDPs", "/my-idps");
-
-try { window.parent.postMessage({ type:"IFRAME_READY" }, "*"); } catch(_) {}
+try {
+  window.parent.postMessage({ type:"MY_IDP_READY" }, "*");
+  window.parent.postMessage({ type:"MY_IDP_REQUEST_INIT" }, "*");
+  window.parent.postMessage({ type:"MY_IDP_REQUEST_LIST" }, "*");
+} catch(_) {}
 </script>
 </body>
 </html>
