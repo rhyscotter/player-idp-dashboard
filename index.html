@@ -3,10 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Individual Development Planner</title>
+<title>IDP Dashboard</title>
 
 <style>
-
 :root{
   --bg:#000;
   --card:#111;
@@ -16,17 +15,22 @@
 
   --accent:#7B2EFF;
   --accent2:#B266FF;
-
   --clubGlow:rgba(123,46,255,.18);
 }
 
 *{box-sizing:border-box}
 
-body{
+html,body{
   margin:0;
+  width:100%;
+  min-height:100%;
   background:#000;
   color:var(--text);
   font-family:Arial,sans-serif;
+}
+
+body{
+  overflow:hidden;
 }
 
 /* ---------- BACKGROUND ---------- */
@@ -35,11 +39,10 @@ body{
   min-height:100vh;
   width:100%;
   padding:40px 50px;
-
   background:
     radial-gradient(1200px 700px at 20% -10%, var(--clubGlow), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(255,255,255,.04), transparent 60%),
     linear-gradient(180deg,#000 0%,#050505 100%);
-
   position:relative;
   overflow:hidden;
 }
@@ -49,15 +52,26 @@ body{
   position:absolute;
   inset:-40% -20%;
   transform:rotate(-14deg);
-
   background:linear-gradient(
     90deg,
     rgba(255,255,255,0),
     rgba(255,255,255,.05),
     rgba(255,255,255,0)
   );
-
   opacity:.18;
+  pointer-events:none;
+}
+
+.stage::after{
+  content:"";
+  position:absolute;
+  width:42vw;
+  height:42vw;
+  right:-10vw;
+  bottom:-18vw;
+  border-radius:50%;
+  background:radial-gradient(circle, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 68%);
+  filter:blur(16px);
   pointer-events:none;
 }
 
@@ -74,12 +88,15 @@ body{
   font-size:54px;
   text-transform:uppercase;
   letter-spacing:1px;
+  line-height:1;
+  margin:0;
 }
 
 .sub{
   margin-top:10px;
   color:var(--muted);
   font-size:16px;
+  line-height:1.45;
 }
 
 /* ---------- ACCENT LINE ---------- */
@@ -88,16 +105,8 @@ body{
   margin-top:18px;
   height:5px;
   border-radius:999px;
-
-  background:linear-gradient(
-    90deg,
-    var(--accent),
-    var(--accent2),
-    transparent
-  );
-
+  background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
   box-shadow:0 0 18px var(--clubGlow);
-
   position:relative;
   overflow:hidden;
 }
@@ -106,14 +115,12 @@ body{
   content:"";
   position:absolute;
   inset:0;
-
   background:linear-gradient(
     120deg,
     rgba(255,255,255,0),
     rgba(255,255,255,.35),
     rgba(255,255,255,0)
   );
-
   transform:translateX(-70%);
   animation:sweep 3s linear infinite;
 }
@@ -127,16 +134,12 @@ body{
 
 .card{
   margin-top:26px;
-  background:rgba(17,17,17,.9);
-
+  background:rgba(17,17,17,.90);
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-
   padding:26px;
-
   position:relative;
   overflow:hidden;
-
   box-shadow:0 20px 70px rgba(0,0,0,.58);
 }
 
@@ -145,15 +148,14 @@ body{
   position:absolute;
   inset:-50% -20%;
   transform:rotate(-12deg);
-
   background:linear-gradient(
     90deg,
     rgba(255,255,255,0),
     rgba(255,255,255,.05),
     rgba(255,255,255,0)
   );
-
-  opacity:.25;
+  opacity:.24;
+  pointer-events:none;
 }
 
 /* ---------- HEADER ROW ---------- */
@@ -162,39 +164,45 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
+  gap:16px;
+  position:relative;
+  z-index:2;
 }
 
 .hTitle{
+  margin:0;
   font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
   font-size:30px;
   text-transform:uppercase;
+  letter-spacing:.8px;
+  line-height:1;
 }
-
-/* ---------- STATUS PILL ---------- */
 
 .pill{
   font-size:12px;
   font-weight:900;
   text-transform:uppercase;
-
+  letter-spacing:.7px;
   padding:8px 12px;
   border-radius:999px;
-
   border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.04);
+  color:#fff;
+  white-space:nowrap;
 }
 
 .pill.accent{
-  border-color:var(--accent);
-  background:rgba(123,46,255,.2);
+  border-color:color-mix(in srgb, var(--accent) 58%, transparent);
+  background:color-mix(in srgb, var(--accent) 18%, transparent);
 }
-
-/* ---------- TEXT ---------- */
 
 .meta{
   margin-top:14px;
   color:rgba(255,255,255,.75);
   font-size:15px;
+  line-height:1.5;
+  position:relative;
+  z-index:2;
 }
 
 /* ---------- GRID ---------- */
@@ -204,240 +212,349 @@ body{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:20px;
+  position:relative;
+  z-index:2;
 }
 
 @media (max-width:900px){
   .grid{grid-template-columns:1fr}
 }
 
-/* ---------- DASHBOARD BUTTON CARDS ---------- */
+/* ---------- ACTION CARDS ---------- */
 
 .actionCard{
+  position:relative;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.25);
-
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+    rgba(0,0,0,.24);
   border-radius:16px;
   padding:28px;
-
-  min-height:160px;
-
-  transition:.2s;
+  min-height:168px;
   cursor:pointer;
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease,
+    background .22s ease;
+  overflow:hidden;
+  outline:none;
 }
 
-.actionCard:hover{
-  transform:translateY(-3px);
-  border-color:var(--accent);
-  background:rgba(123,46,255,.15);
+.actionCard::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 55%, transparent),
+    transparent 35%,
+    transparent 65%,
+    color-mix(in srgb, var(--accent2) 45%, transparent)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:.55;
+  pointer-events:none;
+}
+
+.actionCard::after{
+  content:"";
+  position:absolute;
+  top:-20%;
+  left:-40%;
+  width:55%;
+  height:160%;
+  transform:rotate(18deg) translateX(0);
+  background:linear-gradient(
+    90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.08),
+    rgba(255,255,255,0)
+  );
+  opacity:0;
+  transition:transform .55s ease, opacity .35s ease;
+  pointer-events:none;
+}
+
+.actionCard:hover,
+.actionCard:focus-visible{
+  transform:translateY(-4px);
+  border-color:color-mix(in srgb, var(--accent) 55%, rgba(255,255,255,.16));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, transparent), rgba(255,255,255,.01)),
+    rgba(0,0,0,.28);
+  box-shadow:
+    0 18px 34px rgba(0,0,0,.34),
+    0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent),
+    0 0 34px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.actionCard:hover::after,
+.actionCard:focus-visible::after{
+  opacity:1;
+  transform:rotate(18deg) translateX(240%);
+}
+
+.actionCard:active{
+  transform:translateY(-1px) scale(.995);
 }
 
 .actionTop{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:12px;
 }
 
-/* ---------- CARD TITLE ---------- */
-
 .actionTitle{
+  margin:0;
   font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
   font-size:26px;
   text-transform:uppercase;
+  letter-spacing:.6px;
+  line-height:1;
 }
 
-/* ---------- PROFESSIONAL BADGE ---------- */
+/* ---------- BADGE ---------- */
 
 .badge{
   font-size:10px;
   font-weight:800;
   letter-spacing:.5px;
   text-transform:uppercase;
-
   padding:4px 10px;
   border-radius:8px;
-
   border:1px solid rgba(255,255,255,.15);
   background:rgba(255,255,255,.05);
-
   display:flex;
   align-items:center;
   justify-content:center;
-
   height:22px;
   min-width:46px;
+  color:#fff;
+  white-space:nowrap;
 }
 
 .badge.go{
-  border-color:var(--accent);
+  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
   background:color-mix(in srgb, var(--accent) 18%, transparent);
-  color:#fff;
 }
-
-/* ---------- TEXT ---------- */
 
 .actionText{
   margin-top:12px;
-  color:rgba(255,255,255,.68);
+  color:rgba(255,255,255,.70);
   font-size:15px;
+  line-height:1.45;
 }
-
-/* ---------- ACCENT BAR ---------- */
 
 .arrow{
   margin-top:16px;
   height:3px;
   border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  position:relative;
+  overflow:hidden;
+}
 
+.arrow::before{
+  content:"";
+  position:absolute;
+  inset:0;
   background:linear-gradient(
     90deg,
-    var(--accent),
-    var(--accent2)
+    rgba(255,255,255,0),
+    rgba(255,255,255,.45),
+    rgba(255,255,255,0)
   );
+  transform:translateX(-100%);
+  animation:arrowSweep 3.2s linear infinite;
+  opacity:.85;
+}
+
+@keyframes arrowSweep{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(120%)}
 }
 
 .smallLine{
   height:3px;
   border-radius:999px;
   margin-top:28px;
-
-  background:linear-gradient(
-    90deg,
-    var(--accent),
-    var(--accent2)
-  );
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  position:relative;
+  z-index:2;
 }
 
+@media (prefers-reduced-motion: reduce){
+  .themeLine::before,
+  .arrow::before{
+    animation:none;
+  }
+
+  .actionCard,
+  .actionCard::after{
+    transition:none;
+  }
+}
 </style>
 </head>
 
 <body>
-
 <div class="stage">
-<div class="wrap">
+  <div class="wrap">
 
-<div class="teamName" id="teamName">Individual Development Planner</div>
+    <h1 class="teamName" id="teamName">Individual Development Planner</h1>
 
-<div class="sub" id="sub">
-Create new development plans and review existing player IDPs.
-</div>
+    <div class="sub" id="sub">
+      Create new development plans and review existing player IDPs.
+    </div>
 
-<div class="themeLine"></div>
+    <div class="themeLine" aria-hidden="true"></div>
 
-<div class="card">
+    <div class="card">
+      <div class="hRow">
+        <h3 class="hTitle">IDP Dashboard</h3>
+        <div class="pill accent">Ready</div>
+      </div>
 
-<div class="hRow">
-<h3 class="hTitle">IDP Dashboard</h3>
-<div class="pill accent">Ready</div>
-</div>
+      <div class="meta">
+        Choose an option below to begin creating a new Individual Development Plan or review existing plans.
+      </div>
 
-<div class="meta">
-Choose an option below to begin creating a new Individual Development Plan or review existing plans.
-</div>
+      <div class="grid">
 
-<div class="grid">
+        <div class="actionCard" id="createIDP" role="button" tabindex="0" aria-label="Create IDP">
+          <div class="actionTop">
+            <h4 class="actionTitle">Create IDP</h4>
+            <div class="badge go">Open</div>
+          </div>
 
-<!-- CREATE IDP -->
+          <div class="actionText">
+            Start a new Individual Development Plan for a player and define development priorities.
+          </div>
 
-<div class="actionCard" id="createIDP">
-<div class="actionTop">
-<h4 class="actionTitle">Create IDP</h4>
-<div class="badge go">Open</div>
-</div>
+          <div class="arrow" aria-hidden="true"></div>
+        </div>
 
-<div class="actionText">
-Start a new Individual Development Plan for a player and define development priorities.
-</div>
+        <div class="actionCard" id="myIDPs" role="button" tabindex="0" aria-label="My IDPs">
+          <div class="actionTop">
+            <h4 class="actionTitle">My IDP's</h4>
+            <div class="badge go">View</div>
+          </div>
 
-<div class="arrow"></div>
-</div>
+          <div class="actionText">
+            View all existing development plans and track player progress.
+          </div>
 
-<!-- MY IDPS -->
+          <div class="arrow" aria-hidden="true"></div>
+        </div>
 
-<div class="actionCard" id="myIDPs">
-<div class="actionTop">
-<h4 class="actionTitle">My IDP's</h4>
-<div class="badge go">View</div>
-</div>
+      </div>
 
-<div class="actionText">
-View all existing development plans and track player progress.
-</div>
+      <div class="smallLine"></div>
+    </div>
 
-<div class="arrow"></div>
-</div>
-
-</div>
-
-<div class="smallLine"></div>
-
-</div>
-</div>
+  </div>
 </div>
 
 <script>
-
 /* ---------- NAVIGATION ---------- */
 
-function nav(url){
+function navigate(url){
   try{
-    window.parent.postMessage({type:"NAVIGATE",url},"*");
+    window.parent.postMessage({ type:"NAVIGATE", url:url }, "*");
   }catch(e){
-    console.log("NAV ERROR",e);
+    console.log("Navigation failed:", e);
   }
 }
 
-document.getElementById("createIDP").onclick=()=>{
-  nav("/player-idp");
-};
+function wireCard(id, url){
+  const el = document.getElementById(id);
+  if(!el) return;
 
-document.getElementById("myIDPs").onclick=()=>{
-  nav("/my-idps");
-};
+  const fire = () => navigate(url);
+
+  el.addEventListener("click", fire);
+  el.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      fire();
+    }
+  });
+}
+
+wireCard("createIDP", "/player-idp");
+wireCard("myIDPs", "/my-idps");
 
 /* ---------- THEME SYSTEM ---------- */
 
-function clean(v){return String(v||"").trim();}
-
-function applyTheme({accent,accent2,glow}){
-
-  const r=document.documentElement.style;
-
-  if(accent) r.setProperty("--accent",clean(accent));
-  if(accent2) r.setProperty("--accent2",clean(accent2));
-  if(glow) r.setProperty("--clubGlow",clean(glow));
-
-  console.log("MY IDP theme applied:",{accent,accent2,glow});
+function clean(v){
+  return String(v || "").trim();
 }
 
-window.addEventListener("message",(ev)=>{
+function normalizeColor(input){
+  let c = clean(input);
+  if(!c) return "";
+  c = c.replace(/[;,]+$/g, "").trim();
 
-  const data=ev.data;
+  const hex6 = c.replace("#", "");
+  if(/^[0-9a-fA-F]{6}$/.test(hex6)) return "#" + hex6.toUpperCase();
+  if(/^rgba?\(/i.test(c)) return c;
+  if(/^[a-zA-Z]+$/.test(c)) return c;
+
+  return "";
+}
+
+function applyTheme({ accent, accent2, glow }){
+  const root = document.documentElement.style;
+
+  const safeAccent = normalizeColor(accent);
+  const safeAccent2 = normalizeColor(accent2);
+  const safeGlow = clean(glow);
+
+  if(safeAccent) root.setProperty("--accent", safeAccent);
+  if(safeAccent2) root.setProperty("--accent2", safeAccent2);
+  if(safeGlow) root.setProperty("--clubGlow", safeGlow);
+
+  console.log("IDP Dashboard theme applied:", {
+    accent: safeAccent,
+    accent2: safeAccent2,
+    glow: safeGlow
+  });
+}
+
+window.addEventListener("message", (ev) => {
+  const data = ev.data;
   if(!data) return;
 
-  if(data.type==="IDP_DASH_INIT"){
-
+  if(data.type === "IDP_DASH_INIT"){
     applyTheme({
-      accent:data.theme?.accent,
-      accent2:data.theme?.accent2,
-      glow:data.theme?.glow
+      accent: data.theme?.accent,
+      accent2: data.theme?.accent2,
+      glow: data.theme?.glow
     });
 
-    if(data.title)
-      document.getElementById("teamName").textContent=data.title;
+    if(data.title){
+      document.getElementById("teamName").textContent = data.title;
+    }
 
-    if(data.subtitle)
-      document.getElementById("sub").textContent=data.subtitle;
+    if(data.subtitle){
+      document.getElementById("sub").textContent = data.subtitle;
+    }
   }
-
 });
 
 /* ---------- IFRAME READY ---------- */
 
 try{
-  window.parent.postMessage({type:"IFRAME_READY"},"*");
+  window.parent.postMessage({ type:"IFRAME_READY" }, "*");
 }catch(e){}
-
 </script>
-
 </body>
 </html>
