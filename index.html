@@ -381,7 +381,7 @@ function wire(elId, url){
 }
 
 wire("createIDP", "/player-idp");
-wire("myIDPs", "/player-idps/");
+wire("myIDPs", "/my-idps");
 
 try { window.parent.postMessage({ type:"IFRAME_READY" }, "*"); } catch(_) {}
 </script>
